@@ -1,3 +1,5 @@
+import { getEventById } from "@/dummy-data";
+import { useRouter } from "next/router";
 import React from "react";
 
 const EventDetailPage = () => {
