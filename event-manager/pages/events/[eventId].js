@@ -7,7 +7,8 @@ import React, { Fragment } from "react";
 
 const EventDetailPage = () => {
   const router = useRouter();
-  const event = getEventById(router.query.eventId);
+  const eventId = router.query.eventId;
+  const event = getEventById(eventId);
   return (
     <Fragment>
       <EventSummary title={event.title} />
