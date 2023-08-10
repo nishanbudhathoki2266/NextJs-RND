@@ -6,7 +6,7 @@ function ProductDetailPage(props) {
   const { loadedProduct } = props;
 
   //   If fallback set to blocking, you don't need this fallback check
-  //   if (!loadedProduct) return <p>Loading...</p>;
+  if (!loadedProduct) return <p>Loading...</p>;
 
   return (
     <Fragment>
@@ -33,6 +33,10 @@ export async function getStaticProps(context) {
 
   const product = data.products.find((product) => product.id === productId);
 
+  if (!product) {
+    return { notFound: true };
+  }
+
   return {
     props: {
       loadedProduct: product,
@@ -51,7 +55,7 @@ export async function getStaticPaths() {
 
   return {
     paths: params,
-    fallback: false,
+    fallback: true,
   };
 }
 
