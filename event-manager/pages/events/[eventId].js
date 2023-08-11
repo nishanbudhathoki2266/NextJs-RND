@@ -2,6 +2,7 @@ import EventContent from "@/components/eventDetail/EventContent";
 import EventLogistics from "@/components/eventDetail/EventLogistics";
 import EventSummary from "@/components/eventDetail/EventSummary";
 import ErrorAlert from "@/components/ui/ErrorAlert";
+import Comments from "../../components/input/comments";
 import {
   getEventById,
   getAllEvents,
@@ -37,6 +38,7 @@ const EventDetailPage = (props) => {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </Fragment>
   );
 };
