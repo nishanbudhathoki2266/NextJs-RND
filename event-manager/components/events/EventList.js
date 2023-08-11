@@ -7,7 +7,7 @@ function EventList(props) {
   return (
     <ul className={classes.list}>
       {items.map((event) => (
-        <EventItem id={event.id} event={event} />
+        <EventItem key={event.id} event={event} />
       ))}
     </ul>
   );
