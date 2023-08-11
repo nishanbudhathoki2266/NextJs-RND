@@ -8,6 +8,7 @@ import {
   getFeaturedEvents,
 } from "./../../helpers/api-util";
 import React, { Fragment } from "react";
+import Head from "next/head";
 
 const EventDetailPage = (props) => {
   const event = props.selectedEvent;
@@ -22,6 +23,10 @@ const EventDetailPage = (props) => {
 
   return (
     <Fragment>
+      <Head>
+        <title>Event - {event.title}</title>
+        <meta name="description" content={event.description} />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         date={event.date}
