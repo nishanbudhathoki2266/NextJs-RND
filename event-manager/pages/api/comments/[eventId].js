@@ -1,10 +1,18 @@
-import { MongoClient } from "mongodb";
+import {
+  connectDatabase,
+  getAllDocuments,
+  insertDocument,
+} from "@/helpers/db-util";
 async function handler(req, res) {
   const { eventId } = req.query;
-
-  const client = await MongoClient.connect(
-    "mongodb+srv://nishanbudhathoki2266:nishann11@cluster0.fmspthg.mongodb.net/events?retryWrites=true&w=majority"
-  );
+  let client;
+  try {
+    client = await connectDatabase();
+  } catch (error) {
+    return res.status(500).json({
+      message: "Connecting to the database failed!",
+    });
+  }
 
   if (req.method === "POST") {
     // Add server-side validation
@@ -17,6 +25,7 @@ async function handler(req, res) {
       !text ||
       text.trim() === ""
     ) {
+      client.close();
       return res.status(422).json({
         message: "Invalid input",
       });
@@ -29,35 +38,35 @@ async function handler(req, res) {
       eventId,
     };
 
-    const db = client.db();
+    let result;
+    try {
+      result = await insertDocument(client, "comments", newComment);
+      newComment._id = result.insertedId;
 
-    const result = await db.collection("comments").insertOne(newComment);
-
-    console.log(result);
-
-    newComment.id = result.insertedId;
-
-    res.status(201).json({
-      status: "success",
-      comment: newComment,
-    });
-    client.close();
+      res.status(201).json({
+        status: "success",
+        comment: newComment,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Inserting comment failed!" });
+    }
   }
 
   if (req.method === "GET") {
-    const db = client.db();
-
-    const documents = await db
-      .collection("comments")
-      .find()
-      .sort({ _id: -1 })
-      .toArray();
-
-    res.status(200).json({
-      status: "success",
-      comments: documents,
-    });
+    let documents;
+    try {
+      documents = await getAllDocuments(client, "comments", { _id: -1 });
+      res.status(200).json({
+        status: "success",
+        comments: documents,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Getting comments failed!",
+      });
+    }
   }
+  client.close();
 }
 
 export default handler;
