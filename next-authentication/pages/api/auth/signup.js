@@ -20,6 +20,16 @@ async function handler(req, res) {
 
     const db = client.db();
 
+    const existingUser = await db.collection("users").findOne({ email });
+
+    if (existingUser) {
+      res.status(422).json({
+        message: "User already exists!",
+      });
+      client.close();
+      return;
+    }
+
     const hashedPassword = await hashPassword(password);
 
     const result = await db.collection("users").insertOne({
@@ -30,10 +40,7 @@ async function handler(req, res) {
     res.status(201).json({
       message: "Created user!",
     });
-  }
-
-  if (req.method === "GET") {
-    console.log("I am coming from get request");
+    client.close();
   }
 }
 
