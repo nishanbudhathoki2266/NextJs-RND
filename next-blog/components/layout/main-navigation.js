@@ -7,10 +7,7 @@ function MainNavigation() {
   return (
     <header className={classes.header}>
       <Link href="/">
-        {/* Remember that you must pass text inside Link, so we are wrapping <Logo /> inside an anchor tag */}
-        <a>
-          <Logo />
-        </a>
+        <Logo />
       </Link>
       <nav>
         <ul>
